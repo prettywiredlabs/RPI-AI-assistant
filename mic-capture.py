@@ -64,23 +64,15 @@ def start_recording():
 
 
 def stop_and_play():
-    """Runs automatically when the button is released. Stops and plays back."""
     global recorder
-
-    # If nothing is recording, there is nothing to stop.
     if recorder is None:
         return
-
     # SIGINT lets arecord finish writing a valid WAV header
-    # (SIGINT is the same signal your terminal sends when you press Ctrl+C.)
     recorder.send_signal(signal.SIGINT)
-    recorder.wait()  # wait until arecord has completely finished
-    recorder = None  # remember that we are no longer recording
-
+    recorder.wait()
+    recorder = None
     print("Playing back...")
-    # Play the file through the Pi's speaker. subprocess.run waits until
-    # playback is finished before moving on to the next line.
-    subprocess.run(["aplay", FILE], stderr=subprocess.DEVNULL)
+    subprocess.run(["pw-play", FILE])   # plays to the default sink (your USB speaker)
     print("Done. Hold the button to record again.")
 
 
